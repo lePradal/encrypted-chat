@@ -3,6 +3,32 @@ spring:
     name: chat
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:default}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/encrypted_chat}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+    generate-ddl: true
+  messages:
+    basename: messages
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info
+    endpoint:
+      health:
+        show-details: always
+        enabled: true
+      info:
+        enabled: true
 
 server:
   address: ${SERVER_ADDRESS:0.0.0.0}
