@@ -1,15 +1,16 @@
 package com.prads.chat.infrastructure.adapters.output.persistence;
 
 import com.prads.chat.core.model.UserIdentity;
-import com.prads.chat.core.ports.output.UserRepositoryPort;
+import com.prads.chat.core.ports.output.UserIdentityRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class UserPersistenceAdapter implements UserRepositoryPort {
+public class UserIdentityPersistenceAdapter implements UserIdentityRepositoryPort {
 
     private final UserIdentityRepository repository;
 
@@ -19,7 +20,6 @@ public class UserPersistenceAdapter implements UserRepositoryPort {
             repository.save(mapToEntity(domain));
         }
 
-        // Busca a versão final (garante que temos o createdAt gerado pelo banco)
         return repository.findById(domain.getUserHash())
                 .map(this::mapToDomain)
                 .orElseThrow(() -> new RuntimeException("Erro ao recuperar identidade salva"));
@@ -31,9 +31,17 @@ public class UserPersistenceAdapter implements UserRepositoryPort {
                 .map(entity -> new UserIdentity(
                         entity.getUserHash(),
                         entity.getPublicKey(),
-                        entity.getUserHash(),
+                        entity.getDisplayName(),
                         entity.getCreatedAt()
                 ));
+    }
+
+    @Override
+    public List<UserIdentity> searchByDisplayName(String displayName) {
+        return repository.findByDisplayNameContainingIgnoreCase(displayName)
+                .stream()
+                .map(this::mapToDomain)
+                .toList();
     }
 
     private UserIdentity mapToDomain(UserIdentityEntity entity) {

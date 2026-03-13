@@ -1,6 +1,6 @@
 package com.prads.chat.infrastructure.adapters.input.rest;
 
-import com.prads.chat.core.service.IdentityService;
+import com.prads.chat.core.service.UserIdentityService;
 import com.prads.chat.infrastructure.adapters.input.rest.dto.KeyPairResponse;
 import com.prads.chat.infrastructure.adapters.input.rest.dto.MnemonicRequest;
 import com.prads.chat.infrastructure.adapters.input.rest.dto.MnemonicResponse;
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/helpers")
 @RequiredArgsConstructor
 public class IdentityHelperController {
-    private final IdentityService identityService;
+    private final UserIdentityService userIdentityService;
 
     @PostMapping("/generate-mnemonic")
     public ResponseEntity<MnemonicResponse> generate(@RequestHeader(defaultValue = "12") int size) {
-        return ResponseEntity.ok(identityService.createRandomMnemonic(size));
+        return ResponseEntity.ok(userIdentityService.createRandomMnemonic(size));
     }
 
     @PostMapping("/generate-bundle")
     public ResponseEntity<KeyPairResponse> generate(@RequestBody MnemonicRequest request) {
-        return ResponseEntity.ok(identityService.generateBundle(request.words(), request.passphrase()));
+        return ResponseEntity.ok(userIdentityService.generateBundle(request.words(), request.passphrase()));
     }
 }

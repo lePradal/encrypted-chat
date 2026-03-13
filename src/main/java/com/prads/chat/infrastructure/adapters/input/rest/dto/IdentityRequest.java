@@ -14,7 +14,6 @@ public record IdentityRequest(
 
         @NotBlank(message = "Public key is required")
         @Pattern(
-                // Removed strict ^ and $, allowed trailing whitespace
                 regexp = "(?s).*?-----BEGIN PGP PUBLIC KEY BLOCK-----.*?-----END PGP PUBLIC KEY BLOCK-----\\s*$",
                 message = "Invalid PGP Public Key format"
         )
@@ -22,7 +21,6 @@ public record IdentityRequest(
 
         @NotBlank(message = "Proof signature is required")
         @Pattern(
-                // Same here for the signature
                 regexp = "(?s).*?-----BEGIN PGP SIGNATURE-----.*?-----END PGP SIGNATURE-----\\s*$",
                 message = "Invalid PGP Signature format"
         )
