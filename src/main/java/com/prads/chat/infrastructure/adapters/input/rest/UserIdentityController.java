@@ -3,6 +3,7 @@ package com.prads.chat.infrastructure.adapters.input.rest;
 import com.prads.chat.core.model.UserIdentity;
 import com.prads.chat.core.service.IdentityService;
 import com.prads.chat.infrastructure.adapters.input.rest.dto.IdentityRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,7 @@ public class UserIdentityController {
     private final IdentityService identityService;
 
     @PostMapping
-    public ResponseEntity<UserIdentity> generate(@RequestBody IdentityRequest request) {
+    public ResponseEntity<UserIdentity> generate(@RequestBody @Valid IdentityRequest request) {
         return ResponseEntity.ok(identityService.registerUser(request));
     }
 }
