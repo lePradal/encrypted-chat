@@ -1,4 +1,4 @@
-package com.prads.chat.infrastructure.adapters.output.persistence;
+package com.prads.chat.infrastructure.adapters.output.persistence.userentity;
 
 import com.prads.chat.core.model.UserIdentity;
 import com.prads.chat.core.ports.output.UserIdentityRepositoryPort;
@@ -16,11 +16,11 @@ public class UserIdentityPersistenceAdapter implements UserIdentityRepositoryPor
 
     @Override
     public UserIdentity save(UserIdentity domain) {
-        if (!repository.existsById(domain.getUserHash())) {
+        if (!repository.existsById(domain.getHash())) {
             repository.save(mapToEntity(domain));
         }
 
-        return repository.findById(domain.getUserHash())
+        return repository.findById(domain.getHash())
                 .map(this::mapToDomain)
                 .orElseThrow(() -> new RuntimeException("Erro ao recuperar identidade salva"));
     }
@@ -55,7 +55,7 @@ public class UserIdentityPersistenceAdapter implements UserIdentityRepositoryPor
 
     private UserIdentityEntity mapToEntity(UserIdentity userIdentity) {
         return UserIdentityEntity.builder()
-                .userHash(userIdentity.getUserHash())
+                .userHash(userIdentity.getHash())
                 .publicKey(userIdentity.getPublicKey())
                 .displayName(userIdentity.getDisplayName())
                 .build();

@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface UserIdentityRepositoryPort {
     UserIdentity save(UserIdentity userIdentity);
+
     Optional<UserIdentity> findByHash(String userHash);
+
     List<UserIdentity> searchByDisplayName(String displayName);
 }

@@ -3,7 +3,9 @@ package com.prads.chat.infrastructure.adapters.input.rest;
 import com.prads.chat.core.model.UserIdentity;
 import com.prads.chat.core.service.UserIdentityService;
 import com.prads.chat.infrastructure.adapters.input.rest.dto.IdentityRequest;
+import com.prads.chat.utils.ConstantUtils;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +20,20 @@ public class UserIdentityController {
     private final UserIdentityService userIdentityService;
 
     @PostMapping
-    public ResponseEntity<UserIdentity> createUserIdentity(@RequestBody @Valid IdentityRequest request) {
+    public ResponseEntity<UserIdentity> create(@RequestBody @Valid IdentityRequest request) {
         return ResponseEntity.ok(userIdentityService.registerUser(request));
     }
 
     @GetMapping
-    public ResponseEntity<List<UserIdentity>> getUserIdentities(@RequestParam @Size(min = 3, message = "Display name must be min 3 characters long") String displayName) {
+    public ResponseEntity<List<UserIdentity>> search(@RequestParam @Size(min = 3, message = "Display name must be min 3 characters long") String displayName) {
         return ResponseEntity.ok(userIdentityService.searchIdentities(displayName));
     }
 
     @GetMapping("/{hash}")
-    public ResponseEntity<UserIdentity> findByHash(@PathVariable String hash) {
+    public ResponseEntity<UserIdentity> getByHash(@PathVariable @Pattern(
+            regexp = ConstantUtils.USER_HASH_REGEX,
+            message = "User hash must be a valid 0x hex string (40 or 64 chars)"
+    ) String hash) {
         return ResponseEntity.ok(userIdentityService.findByHash(hash));
     }
 }

@@ -12,13 +12,13 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserIdentity {
-    String userHash;
+    String hash;
     String publicKey;
     String displayName;
     Instant createdAt;
 
-    public UserIdentity(String userHash, String publicKey, String displayName) {
-        this.userHash = userHash;
+    public UserIdentity(String hash, String publicKey, String displayName) {
+        this.hash = hash;
         this.publicKey = publicKey;
         this.displayName = displayName;
     }

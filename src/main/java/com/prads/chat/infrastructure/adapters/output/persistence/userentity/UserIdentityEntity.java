@@ -1,4 +1,4 @@
-package com.prads.chat.infrastructure.adapters.output.persistence;
+package com.prads.chat.infrastructure.adapters.output.persistence.userentity;
 
 import jakarta.persistence.*;
 import lombok.*;
