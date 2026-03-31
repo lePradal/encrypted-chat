@@ -10,5 +10,6 @@ public record ErrorResponse(
         List<FieldError> errors,
         String path
 ) {
-    public record FieldError(String field, String message) {}
+    public record FieldError(String field, String message) {
+    }
 }

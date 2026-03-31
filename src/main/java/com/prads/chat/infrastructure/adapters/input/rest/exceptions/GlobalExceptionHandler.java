@@ -1,5 +1,6 @@
 package com.prads.chat.infrastructure.adapters.input.rest.exceptions;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class GlobalExceptionHandler {
                 .map(error -> new ErrorResponse.FieldError(error.getField(), error.getDefaultMessage()))
                 .toList();
 
-        return buildResponseEntity("Request body error validation.", fieldErrors);
+        return buildResponseEntity("Request body error validation.", fieldErrors, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
@@ -38,17 +39,23 @@ public class GlobalExceptionHandler {
                         )))
                 .toList();
 
-        return buildResponseEntity("URL params error validation.", fieldErrors);
+        return buildResponseEntity("URL params error validation.", fieldErrors, HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<ErrorResponse> buildResponseEntity(String message, List<ErrorResponse.FieldError> errors) {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEntityNotFound(EntityNotFoundException ex) {
+        return buildResponseEntity(ex.getMessage(), List.of(), HttpStatus.NOT_FOUND);
+    }
+
+    private ResponseEntity<ErrorResponse> buildResponseEntity(String message, List<ErrorResponse.FieldError> errors, HttpStatus status) {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
+                status.value(),
                 message,
                 errors,
                 request.getRequestURI()
         );
-        return ResponseEntity.badRequest().body(errorResponse);
+
+        return new ResponseEntity<>(errorResponse, status);
     }
 }

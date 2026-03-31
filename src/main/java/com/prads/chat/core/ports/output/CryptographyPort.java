@@ -8,4 +8,8 @@ public interface CryptographyPort {
     String getFingerprint(String publicKey);
 
     boolean verifySignature(String userHash, String proofSignature, String publicKey);
+
+    String encrypt(String plainText, String receiverPublicKeyArmor);
+
+    String decrypt(String cipherTextArmor, String ownerPrivateKeyArmor);
 }
